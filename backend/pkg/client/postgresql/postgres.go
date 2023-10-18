@@ -32,7 +32,7 @@ type Config struct {
 }
 
 // ConnectionConfig creates a connection configuration for PostgresSQL
-func ConnectionConfig(cfg Config) (*pgxpool.Config, error) {
+func connectionConfig(cfg Config) (*pgxpool.Config, error) {
 	config, err := pgxpool.ParseConfig(fmt.Sprintf(
 		"user=%s password=%s host=%s port=%s dbname=%s sslmode=%s",
 		cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode))
@@ -46,14 +46,14 @@ func ConnectionConfig(cfg Config) (*pgxpool.Config, error) {
 // ConnectToDB connects to the PostgresSQL database
 func ConnectToDB(ctx context.Context, cfg Config) (db *pgxpool.Pool, err error) {
 	var maxAttempts = 5
-	connCfg, err := ConnectionConfig(cfg)
+	connCfg, err := connectionConfig(cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	err = utils.DoWithTries(
 		func() error {
-			ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+			ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 			defer cancel()
 
 			db, err = pgxpool.NewWithConfig(ctx, connCfg)
