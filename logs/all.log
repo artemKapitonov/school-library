@@ -1,0 +1,4 @@
+time=2024-02-18T20:56:00.737+03:00 level=INFO msg="Succesfuly connect ro database"
+time=2024-02-18T20:56:37.068+03:00 level=INFO msg="Book 564, 546"
+time=2024-02-18T20:56:40.287+03:00 level=INFO msg="Book id is 44"
+time=2024-02-18T20:56:47.308+03:00 level=INFO msg="Book 555, 55"
