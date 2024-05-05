@@ -1,10 +1,10 @@
 export namespace entity {
 	
 	export class Student {
-	    class?: string;
-	    books?: Book[];
 	    id?: number;
+	    class?: string;
 	    name?: string;
+	    books?: Book[];
 	
 	    static createFrom(source: any = {}) {
 	        return new Student(source);
@@ -12,10 +12,10 @@ export namespace entity {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.class = source["class"];
-	        this.books = this.convertValues(source["books"], Book);
 	        this.id = source["id"];
+	        this.class = source["class"];
 	        this.name = source["name"];
+	        this.books = this.convertValues(source["books"], Book);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -37,12 +37,12 @@ export namespace entity {
 		}
 	}
 	export class Book {
-	    students?: Student[];
 	    id?: number;
 	    author?: string;
 	    title?: string;
 	    year?: number;
 	    count?: number;
+	    students?: Student[];
 	
 	    static createFrom(source: any = {}) {
 	        return new Book(source);
@@ -50,12 +50,12 @@ export namespace entity {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.students = this.convertValues(source["students"], Student);
 	        this.id = source["id"];
 	        this.author = source["author"];
 	        this.title = source["title"];
 	        this.year = source["year"];
 	        this.count = source["count"];
+	        this.students = this.convertValues(source["students"], Student);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

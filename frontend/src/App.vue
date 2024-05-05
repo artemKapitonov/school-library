@@ -1,15 +1,19 @@
 <script setup>
     import { entity } from "../wailsjs/go/models";
-import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudentByID, DeleteStudent, UpdateStudent, CreateStudent } from "../wailsjs/go/transport/Transport"
+import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, SearchBook, DeleteStudent, UpdateStudent, CreateStudent, SearchStudent, GetAllStudents } from "../wailsjs/go/transport/Transport"
 </script>
 
 <template>
-  <div id="sidebar">
+    <div id="sidebar">
         <div id="students">
+                <button class="internal-button" @click="showAllStudents()">Все ученики</button>
                 <button class="internal-button" @click="showFindStudentForm()">Найти ученика</button>
                 <button class="internal-button" @click="showAddStudentForm()">Добавить ученика</button>
                 <button class="internal-button" @click="showEditStudentForm()">Изменить ученика</button>
                 <button class="internal-button" @click="showDeleteStudentForm()">Удалить ученика</button>
+        </div>
+        <div>
+            <br>
         </div>
         <div id="books">
                 <button class="internal-button" @click="showAllBook()">Все книги</button>
@@ -18,72 +22,92 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
                 <button class="internal-button" @click="showEditBookForm()">Изменить книгу</button>
                 <button class="internal-button" @click="showDeleteBookForm()">Удалить книгу</button>    
         </div>
+
+        <div>
+            <button class="internal-button" @click="showRegisterBookForStudent()">Записать книгу ученику</button>
+        </div>
     </div>
 
     <div id="main-content">
-        <div class="table"  id="studentsTable" v-show="currentForm === 'studentsTable'">
-            <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Класс</th>
-                    <th>Фамилия Имя</th>
-                    <th>Книги</th>
-                </tr>
-            </thead>
-            <tbody v-for="s in students" :key="id">
-                <tr>
-                    <td>{{ s.id }}</td>
-                    <td>{{ s.class }}</td>
-                    <td>{{ s.name }}</td>
-                    <td>
 
-                    <p v-for="b in s.books" :key="id">
-                        {{ b.author }}
-                        {{ b.title}}
-                    </p>
-                    </td>
-                </tr>
-            </tbody>
-            </table>
+        <div class="form" v-show="currentForm === 'studentsTable'">
+            <div class="table"  id="studentsTable" >
+                <table>
+                <thead>
+                    <tr>
+                        <th  class="br1">ID</th>
+                        <th>Класс</th>
+                        <th>Фамилия Имя</th>
+                        <th  class="br2">Книги</th>
+                    </tr>
+                </thead>
+                <tbody v-for="s in students" :key="id">
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.class }}</td>
+                        <td>{{ s.name }}</td>
+                        <td>
 
-        </div>
-
-        <div class="table"  id="booksTable" v-show="currentForm === 'booksTable'">
-            <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Автор</th>
-                    <th>Название</th>
-                    <th>Год издания</th>
-                    <th>Количество</th>
-                    <th>Обладатели</th>
-                    
-                </tr>
-            </thead>
-            <tbody v-for="book in books" :key="id">
-                <tr>
-                    <td>{{ book.id }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.year }}</td>
-                    <td>{{ book.count }}</td>
-                    <td>
-                        <p v-for="s in book.students" :key="id">
-                            {{ s.class}}
-                            {{ s.name }}
+                        <p v-for="b in s.books" :key="id">
+                            {{ b.id }}
+                            {{ b.author }}
+                            {{ b.title}}
                         </p>
-                    </td>
-                </tr>
-            </tbody> 
-            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="error" v-show="currentForm === 'errorInfo'">
+        <div class="form" v-show="currentForm === 'booksTable'">
+            <div class="table"  id="booksTable" >
+                <table>
+                <thead>
+                    <tr>
+                        <th class="br1">ID</th>
+                        <th>Автор</th>
+                        <th>Название</th>
+                        <th>Год издания</th>
+                        <th>Количество</th>
+                        <th class="br2">Обладатели</th>
+                    </tr>
+                </thead>
+                <tbody v-for="book in books" :key="id">
+                    <tr>
+                        <td>{{ book.id }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.year }}</td>
+                        <td>{{ book.count }}</td>
+                        <td>
+                            <p v-for="s in book.students" :key="id">
+                                {{ s.id }}
+                                {{ s.class}}
+                                {{ s.name }}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody> 
+                </table>
+            </div>
+        </div>
+
+        
+
+        <div class="form" v-show="currentForm === 'errorInfo'">
             <h1>
                 {{ error }}
             </h1>
+        </div>
+
+        <div class="form" v-show="currentForm === 'registerForm'">
+            <h2>Записать книгу ученику</h2>
+            <label for="ID" >Введите ID ученика:</label>
+            <input type="number" v-model="registerStudentValue">
+            <label for="ID" >Введите ID книги:</label>
+            <input type="number" v-model="registerBookValue">
+            <button type="submit" @click="RegisterBookForStudent()">Записать</button>
         </div>
 
         <div class="form" v-show="currentForm === 'deleteBookForm'">
@@ -178,9 +202,9 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         float: left;
         height: 100%;
         width: 33%;
-        background-color: #bcb9b9b3;
+        background-color: rgba(229, 227, 227, 0.7);
         padding: 20px;
-        box-shadow: 2px 0px 5px #db72e4;
+        box-shadow: 0px 0px 10px rgb(14, 117, 233);
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
     }
@@ -229,16 +253,9 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         margin-bottom: 5px;
     }
 
-    #error {
-        border-radius: 20px;
-        font-size: large;
-        width: 90%;
-    }
 
     .table {
-        width: 100%;
-        border-top-right-radius: 20px;
-        border-collapse: collapse;
+        width: 100%; 
     }
 
     .table table {
@@ -247,39 +264,35 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         border-collapse: collapse;
     }
 
+    .br1{
+          border-radius: 20px 0 0 0;
+    }
+    .br2{
+        border-radius: 0 20px 0 0;
+    }
+
     .table th, tr{
         padding: 8px;
     }
 
     .table th {
-        background-color: #0eebfb;
+        background-color: #ffffff;
     }
 
     .table tbody tr:nth-child(even) {
-        background-color: #11e9ec;
+        background-color: #ec1111;
     }
+​
 
     .table tbody tr:hover {
-        background-color: #08f010;
+        background-color: rgba(133, 133, 174, 0.77);
     }
-
-    .tab-button {
-        background: #536dfe;
-        border: none;
-        color: #fff;
-        padding: 10px 20px;
-        display: block;
-        width: 80%;
-        text-align: left;
-        cursor: pointer;
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }
+    
     .form {
-        background-color: #eee9e9f3;
+        background-color: #e3e3e3f3;
         padding: 20px;
         border-radius: 5px;
-        box-shadow: 0px 0px 10px rgb(233, 5, 249);
+        box-shadow: 0px 0px 10px rgb(14, 117, 233);
     }
 
     .form h2 {
@@ -303,7 +316,7 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         height: 20%;
         position: relative;
         left: 30px;
-        background: #449087e5;
+        background: #3f85a3;
         border: none;
         color: #fff;
         padding: 10px 20px;
@@ -315,9 +328,6 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         margin-bottom: 10px;
     }
 
-    .tab-button:hover {
-        background-color: #4255ff;
-    }
     .form {
         color: #0c0101;
         margin-top: 20px;
@@ -334,7 +344,7 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         border-radius: 5px;
     }
     .form button {
-        background-color: #536dfe;
+        background-color: #4b64f5;
         color: #fff;
         padding: 10px 20px;
         border: none;
@@ -343,7 +353,7 @@ import {GetBookByID, GetAllBooks, CreateBook, DeleteBook, UpdateBook, GetStudent
         margin-top: 10px;
     }
     .form button:hover {
-        background-color: #304ffe;
+        background-color: #3f85a3;
     }
 </style>
 
@@ -362,11 +372,7 @@ export default {
     findBook: async function() {
             this.books = []
             const word = this.findBookValue;
-            const book = await GetBookByID(word)
-
-            console.log(book)
-            this.books.push(book);
-
+            this.books = await SearchBook(word)
 
             this.currentForm = 'booksTable';
     },
@@ -414,20 +420,20 @@ export default {
 
     findStudent: async function() {
         this.students = []
-        const name = this.findStidentValue;
-        const student = await GetStudentByID(name)
+        const name = this.findStudentValue;
 
-        this.students.push(student);
+        this.students = await SearchStudent(name)
         this.currentForm = 'studentsTable';
     },
 
     allStudent: async function() {
-        this.books = await GetAllBooks();
-        this.currentForm = 'booksTable';
+        this.students = []
+        this.students = await GetAllStudents();
+        this.currentForm = 'studentsTable';
     },
 
     deleteStudent: async function() {
-        const id = this.deleteBookValue;
+        const id = this.deleteStudentValue;
         this.error = await DeleteStudent(id);
         this.currentForm = 'errorInfo'
     },
@@ -436,7 +442,7 @@ export default {
         const form = {
             id: this.editStudentID,
             class: this.editStudentClass,
-            name: this.addStudentName
+            name: this.editStudentName
         };
 
         let student = new entity.Student(form);
@@ -454,6 +460,14 @@ export default {
         let student = new entity.Student(form);
 
         this.error = await CreateStudent(student);
+        this.currentForm = 'errorInfo'
+    },
+
+    RegisterBookForStudent: async function() {
+        let book_id = this.registerBookValue
+        let student_id = this.registerStudentValue
+
+        this.error = await RegisterStudentBook(book_id, student_id)
         this.currentForm = 'errorInfo'
     },
 
@@ -475,6 +489,11 @@ export default {
     },
 
 
+
+    showAllStudents() {
+        this.allStudent()
+    },
+
     showFindStudentForm() {
         this.currentForm = 'findStudentForm'
     },
@@ -486,6 +505,11 @@ export default {
     },
     showDeleteStudentForm() {
         this.currentForm = 'deleteStudentForm'
+    }, 
+
+
+    showRegisterBookForStudent() {
+        this.currentForm = 'registerForm'
     }
   }
 };

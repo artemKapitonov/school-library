@@ -3,9 +3,13 @@ package transport
 import "github.com/artemKapitonov/school-library/backend/internal/storage"
 
 type Transport struct {
-	s *storage.Storage
+	BookManager
+	StudentManager
 }
 
 func New(s *storage.Storage) *Transport {
-	return &Transport{s: s}
+	return &Transport{
+		BookManager:    s.BookStorage,
+		StudentManager: s.StudentStorage,
+	}
 }

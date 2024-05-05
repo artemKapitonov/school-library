@@ -12,11 +12,13 @@ export function DeleteStudent(arg1:number):Promise<string>;
 
 export function GetAllBooks():Promise<Array<entity.Book>>;
 
-export function GetAllStudents():Promise<string>;
+export function GetAllStudents():Promise<Array<entity.Student>>;
 
-export function GetBookByID(arg1:string):Promise<entity.Book>;
+export function RegisterStudentBook(arg1:number,arg2:number):Promise<string>;
 
-export function GetStudentByID(arg1:string):Promise<entity.Student>;
+export function SearchBook(arg1:string):Promise<Array<entity.Book>>;
+
+export function SearchStudent(arg1:string):Promise<Array<entity.Student>>;
 
 export function UpdateBook(arg1:entity.Book):Promise<string>;
 

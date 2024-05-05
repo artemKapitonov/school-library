@@ -1,43 +1,60 @@
 package transport
 
-import "github.com/artemKapitonov/school-library/backend/internal/entity"
+import (
+	"log/slog"
 
-func (t *Transport) GetAllStudents() string {
-	return "Student create"
+	"github.com/artemKapitonov/school-library/backend/internal/entity"
+)
+
+type StudentManager interface {
+	GetAllStudents() ([]entity.Student, error)
+	SearchStudent(word string) ([]entity.Student, error)
+	CreateStudent(student entity.Student) error
+	DeleteStudent(id uint64) error
+	UpdateStudent(student entity.Student) error
 }
 
-func (t *Transport) GetStudentByID(name string) entity.Student {
-	return entity.Student{
-		ID:    100,
-		Class: "10B",
-		Name:  "Vacay Pupkin",
-		Books: []entity.Book{
-			entity.Book{
-				ID:     5,
-				Author: "Pushkin",
-				Title:  "Евгений Онегин",
-				Year:   10,
-				Count:  5,
-			},
-			entity.Book{
-				ID:     10,
-				Author: "Тургенев",
-				Title:  "Отцы и дети",
-				Year:   100,
-				Count:  5,
-			},
-		},
+func (t *Transport) GetAllStudents() []entity.Student {
+	students, err := t.StudentManager.GetAllStudents()
+	if err != nil {
+		slog.Error("Get All students Error", err)
 	}
+
+	return students
 }
 
-func (t *Transport) CreateStudent(entity.Student) string {
-	return "Student create"
+func (t *Transport) SearchStudent(word string) []entity.Student {
+	students, err := t.StudentManager.SearchStudent(word)
+	if err != nil {
+		slog.Error("Search student Error", err)
+	}
+
+	return students
+}
+
+func (t *Transport) CreateStudent(s entity.Student) string {
+	err := t.StudentManager.CreateStudent(s)
+	if err != nil {
+		return ""
+	}
+
+	return "Success"
 }
 
 func (t *Transport) DeleteStudent(id uint64) string {
-	return "Student delete"
+	err := t.StudentManager.DeleteStudent(id)
+	if err != nil {
+		return err.Error()
+	}
+
+	return "Success"
 }
 
-func (t *Transport) UpdateStudent(entity.Student) string {
-	return "Student update succesfuly"
+func (t *Transport) UpdateStudent(student entity.Student) string {
+	err := t.StudentManager.UpdateStudent(student)
+	if err != nil {
+		return "ERROR"
+	}
+
+	return "Updated"
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"log/slog"
 
 	"github.com/artemKapitonov/school-library/backend/app"
 	"github.com/wailsapp/wails/v2"
@@ -24,13 +25,14 @@ func main() {
 			Assets: assets,
 		},
 
-		OnStartup: app.Startup,
+		OnStartup:  app.Startup,
+		OnShutdown: app.OnShutdown,
 		Bind: []interface{}{
 			app.Transport,
 		},
 	})
-
 	if err != nil {
-		println("Error:", err.Error())
+		slog.Error("Failed to start application Error:", err)
 	}
+
 }

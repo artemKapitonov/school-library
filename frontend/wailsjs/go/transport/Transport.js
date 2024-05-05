@@ -26,12 +26,16 @@ export function GetAllStudents() {
   return window['go']['transport']['Transport']['GetAllStudents']();
 }
 
-export function GetBookByID(arg1) {
-  return window['go']['transport']['Transport']['GetBookByID'](arg1);
+export function RegisterStudentBook(arg1, arg2) {
+  return window['go']['transport']['Transport']['RegisterStudentBook'](arg1, arg2);
 }
 
-export function GetStudentByID(arg1) {
-  return window['go']['transport']['Transport']['GetStudentByID'](arg1);
+export function SearchBook(arg1) {
+  return window['go']['transport']['Transport']['SearchBook'](arg1);
+}
+
+export function SearchStudent(arg1) {
+  return window['go']['transport']['Transport']['SearchStudent'](arg1);
 }
 
 export function UpdateBook(arg1) {

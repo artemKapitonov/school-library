@@ -1,67 +1,73 @@
 package transport
 
 import (
-	"fmt"
 	"log/slog"
 
 	"github.com/artemKapitonov/school-library/backend/internal/entity"
 )
 
-func (t *Transport) GetAllBooks() []entity.Book {
-	return []entity.Book{
-		entity.Book{
-			ID:     10,
-			Author: "Pushkin",
-			Title:  "Евгений Онегин",
-			Year:   10,
-			Count:  5,
-			Students: []entity.Student{
-				entity.Student{
-					ID:    100,
-					Class: "10B",
-					Name:  "Vacay Pupkin",
-				},
-			},
-		},
-		entity.Book{
-			ID:     10,
-			Author: "Тургенев",
-			Title:  "Отцы и дети",
-			Year:   100,
-			Count:  5,
-		},
-	}
+type BookManager interface {
+	GetAllBooks() ([]entity.Book, error)
+	SearchBook(word string) ([]entity.Book, error)
+	CreateBook(book entity.Book) error
+	DeleteBook(id uint64) error
+	UpdateBook(entity.Book) error
+	RegisterStudentBook(bookID, stdentID uint64) error
 }
 
-func (t *Transport) GetBookByID(word string) entity.Book {
-	slog.Info(fmt.Sprintf("Book id is %s", word))
-	return entity.Book{
-		ID:     10,
-		Author: "Pushkin",
-		Title:  "Евгений Онегин",
-		Year:   10,
-		Count:  50,
-		Students: []entity.Student{
-			entity.Student{
-				ID:    100,
-				Class: "10B",
-				Name:  "Vacay Pupkin",
-			},
-		},
+func (t *Transport) GetAllBooks() []entity.Book {
+	books, err := t.BookManager.GetAllBooks()
+	if err != nil {
+		slog.Error("Get all book error", err)
 	}
+
+	return books
+}
+
+func (t *Transport) SearchBook(word string) []entity.Book {
+	books, err := t.BookManager.SearchBook(word)
+	if err != nil {
+		slog.Error("Search book Error", err)
+	}
+
+	return books
 }
 
 func (t *Transport) CreateBook(book entity.Book) string {
-	slog.Info(fmt.Sprintf("Book %s, %s", book.Author, book.Title))
-	return "Book was succesfully added"
+	err := t.BookManager.CreateBook(book)
+	if err != nil {
+		slog.Error("Can't create book", err)
+		return "Ошибка"
+	}
+
+	return "Книга успешно создана"
 }
 
 func (t *Transport) DeleteBook(id uint64) string {
-	slog.Info(fmt.Sprintf("Book id is %d", id))
-	return fmt.Sprintf("Book was succesfully deleted")
+	err := t.BookManager.DeleteBook(id)
+	if err != nil {
+		slog.Error("Can't delete book", err)
+		return "Ошибка"
+	}
+
+	return "Success"
 }
 
 func (t *Transport) UpdateBook(book entity.Book) string {
-	slog.Info(fmt.Sprintf("Book %s, %s", book.Author, book.Title))
+	err := t.BookManager.UpdateBook(book)
+	if err != nil {
+		slog.Error("Can't update book", err)
+		return "ERROR"
+	}
 	return "Book was succesfully updated"
+}
+
+func (t *Transport) RegisterStudentBook(bookID, studentID uint64) string {
+	err := t.BookManager.RegisterStudentBook(bookID, studentID)
+	if err != nil {
+		slog.Error("Can't register Error:", err)
+		return "ERPPRPR{RR}"
+	}
+
+	return "Success"
 }
