@@ -56,7 +56,7 @@ func selectLoggerWriter(w string) io.Writer {
 		writer = os.Stdout
 
 	default:
-		writer = os.Stdout
+		writer = getLogFile()
 	}
 
 	return writer
