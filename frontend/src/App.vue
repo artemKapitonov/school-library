@@ -23,8 +23,9 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
                 <button class="internal-button" @click="showDeleteBookForm()">Удалить книгу</button>    
         </div>
 
-        <div>
+        <div id="register">
             <button class="internal-button" @click="showRegisterBookForStudent()">Записать книгу ученику</button>
+            <button class="internal-button" @click="showUnregisterBookForStudent()">Снять запись книги</button>
         </div>
     </div>
 
@@ -108,6 +109,15 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
             <label for="ID" >Введите ID книги:</label>
             <input type="number" v-model="registerBookValue">
             <button type="submit" @click="RegisterBookForStudent()">Записать</button>
+        </div>
+
+        <div class="form" v-show="currentForm === 'unregisterForm'">
+            <h2>Снять запись книги</h2>
+            <label for="ID" >Введите ID ученика:</label>
+            <input type="number" v-model="registerStudentValue">
+            <label for="ID" >Введите ID книги:</label>
+            <input type="number" v-model="registerBookValue">
+            <button type="submit" @click="RegisterBookForStudent()">Снять</button>
         </div>
 
         <div class="form" v-show="currentForm === 'deleteBookForm'">
@@ -240,6 +250,7 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
         border-radius: 20px;
         background-color:  #dae4e0;
         padding: 5px;
+        margin: 10px;
     }
 
     #books::before {
@@ -252,6 +263,28 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
         font-size: large;
         margin-bottom: 5px;
     }
+
+    #register {
+        width: 90%;
+        position: relative;
+        border-radius: 20px;
+        background-color:  #dae4e0;
+        padding: 5px;
+        margin: 10px;
+    }
+
+
+    #register::before {
+        border: #0c0101;
+        color: #0c0101;
+        height: 20px;
+        content: "Записи";
+        display: block;
+        text-align: left;
+        font-size: large;
+        margin-bottom: 5px;
+    }
+    
 
 
     .table {
@@ -510,6 +543,10 @@ export default {
 
     showRegisterBookForStudent() {
         this.currentForm = 'registerForm'
+    },
+
+    showUnregisterBookForStudent() {
+        this.currentForm = 'unregisterForm'
     }
   }
 };
