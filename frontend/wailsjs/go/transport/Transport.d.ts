@@ -20,6 +20,8 @@ export function SearchBook(arg1:string):Promise<Array<entity.Book>>;
 
 export function SearchStudent(arg1:string):Promise<Array<entity.Student>>;
 
+export function UnregisterStudentBook(arg1:number,arg2:number):Promise<string>;
+
 export function UpdateBook(arg1:entity.Book):Promise<string>;
 
 export function UpdateStudent(arg1:entity.Student):Promise<string>;

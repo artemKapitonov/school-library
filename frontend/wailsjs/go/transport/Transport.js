@@ -38,6 +38,10 @@ export function SearchStudent(arg1) {
   return window['go']['transport']['Transport']['SearchStudent'](arg1);
 }
 
+export function UnregisterStudentBook(arg1, arg2) {
+  return window['go']['transport']['Transport']['UnregisterStudentBook'](arg1, arg2);
+}
+
 export function UpdateBook(arg1) {
   return window['go']['transport']['Transport']['UpdateBook'](arg1);
 }

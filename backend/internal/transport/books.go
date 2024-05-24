@@ -1,9 +1,11 @@
 package transport
 
 import (
+	"database/sql"
 	"log/slog"
 
 	"github.com/artemKapitonov/school-library/backend/internal/entity"
+	"github.com/artemKapitonov/school-library/backend/internal/transport/messages"
 )
 
 type BookManager interface {
@@ -12,8 +14,9 @@ type BookManager interface {
 	CreateBook(book entity.Book) error
 	DeleteBook(id uint64) error
 	UpdateBook(entity.Book) error
-	RegisterStudentBook(bookID, stdentID uint64) error
 }
+
+
 
 func (t *Transport) GetAllBooks() []entity.Book {
 	books, err := t.BookManager.GetAllBooks()
@@ -37,37 +40,38 @@ func (t *Transport) CreateBook(book entity.Book) string {
 	err := t.BookManager.CreateBook(book)
 	if err != nil {
 		slog.Error("Can't create book", err)
-		return "Ошибка"
+		return messages.ErrBookNotCreated
 	}
 
-	return "Книга успешно создана"
+	return messages.BookCreated
 }
 
 func (t *Transport) DeleteBook(id uint64) string {
 	err := t.BookManager.DeleteBook(id)
-	if err != nil {
-		slog.Error("Can't delete book", err)
-		return "Ошибка"
+	if err == sql.ErrNoRows {
+		return messages.BookNotFound
 	}
 
-	return "Success"
+	if err != nil {
+		slog.Error("Can't delete book", err)
+		return messages.ErrBookNotDeleted
+	}
+
+	return messages.BookDeleted
 }
 
 func (t *Transport) UpdateBook(book entity.Book) string {
 	err := t.BookManager.UpdateBook(book)
+	if err == sql.ErrNoRows {
+		return messages.BookNotFound
+	}
+
 	if err != nil {
 		slog.Error("Can't update book", err)
-		return "ERROR"
-	}
-	return "Book was succesfully updated"
-}
-
-func (t *Transport) RegisterStudentBook(bookID, studentID uint64) string {
-	err := t.BookManager.RegisterStudentBook(bookID, studentID)
-	if err != nil {
-		slog.Error("Can't register Error:", err)
-		return "ERPPRPR{RR}"
+		return messages.ErrBookNotUpdated
 	}
 
-	return "Success"
+	return messages.BookUpdated
 }
+
+

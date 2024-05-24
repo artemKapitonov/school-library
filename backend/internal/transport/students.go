@@ -4,6 +4,7 @@ import (
 	"log/slog"
 
 	"github.com/artemKapitonov/school-library/backend/internal/entity"
+	"github.com/artemKapitonov/school-library/backend/internal/transport/messages"
 )
 
 type StudentManager interface {
@@ -35,26 +36,29 @@ func (t *Transport) SearchStudent(word string) []entity.Student {
 func (t *Transport) CreateStudent(s entity.Student) string {
 	err := t.StudentManager.CreateStudent(s)
 	if err != nil {
-		return ""
+		slog.Error("Student not created Error:", err)
+		return messages.ErrStudentNotCreated
 	}
 
-	return "Success"
+	return messages.StudentCreated
 }
 
 func (t *Transport) DeleteStudent(id uint64) string {
 	err := t.StudentManager.DeleteStudent(id)
 	if err != nil {
-		return err.Error()
+		slog.Error("Student not deleted Error:", err)
+		return messages.ErrStudentNotDeleted
 	}
 
-	return "Success"
+	return messages.StudentDeleted
 }
 
 func (t *Transport) UpdateStudent(student entity.Student) string {
 	err := t.StudentManager.UpdateStudent(student)
 	if err != nil {
-		return "ERROR"
+		slog.Error("Student not updated", err)
+		return messages.ErrStudentNotUpdated
 	}
 
-	return "Updated"
+	return messages.StudentUpdated
 }

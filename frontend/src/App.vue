@@ -1,6 +1,6 @@
 <script setup>
     import { entity } from "../wailsjs/go/models";
-import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, SearchBook, DeleteStudent, UpdateStudent, CreateStudent, SearchStudent, GetAllStudents } from "../wailsjs/go/transport/Transport"
+import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, SearchBook, DeleteStudent, UpdateStudent, CreateStudent, SearchStudent, GetAllStudents, UnregisterStudentBook} from "../wailsjs/go/transport/Transport"
 </script>
 
 <template>
@@ -117,7 +117,7 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
             <input type="number" v-model="registerStudentValue">
             <label for="ID" >Введите ID книги:</label>
             <input type="number" v-model="registerBookValue">
-            <button type="submit" @click="RegisterBookForStudent()">Снять</button>
+            <button type="submit" @click="UnregisterBookForStudent()">Снять</button>
         </div>
 
         <div class="form" v-show="currentForm === 'deleteBookForm'">
@@ -501,6 +501,14 @@ export default {
         let student_id = this.registerStudentValue
 
         this.error = await RegisterStudentBook(book_id, student_id)
+        this.currentForm = 'errorInfo'
+    },
+
+    UnregisterBookForStudent: async function() {
+        let book_id = this.registerBookValue
+        let student_id = this.registerStudentValue
+
+        this.error = await UnregisterStudentBook(book_id, student_id)
         this.currentForm = 'errorInfo'
     },
 

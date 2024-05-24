@@ -13,6 +13,7 @@ type Storage struct {
 	DB *sqlx.DB
 	*BookStorage
 	*StudentStorage
+	*RegistrarStorage
 }
 
 func New(db *sqlx.DB) *Storage {

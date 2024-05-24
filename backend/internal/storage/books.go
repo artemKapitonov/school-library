@@ -123,16 +123,6 @@ func (s *BookStorage) UpdateBook(book entity.Book) error {
 	return nil
 }
 
-func (s *BookStorage) RegisterStudentBook(bookID, studentID uint64) error {
-	var query = fmt.Sprintf("INSERT INTO students_books (book_id, student_id) VALUES (%d, %d);", bookID, studentID)
-
-	_, err := s.db.Exec(query)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func (s *BookStorage) getStudentsByBookID(bookID uint64) ([]entity.Student, error) {
 	var students []entity.Student
