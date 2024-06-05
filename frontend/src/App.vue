@@ -20,7 +20,7 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
                 <button class="internal-button" @click="showFindBookForm()">Найти книгу</button>
                 <button class="internal-button" @click="showAddBookForm()">Добавить книгу</button>
                 <button class="internal-button" @click="showEditBookForm()">Изменить книгу</button>
-                <button class="internal-button" @click="showDeleteBookForm()">Удалить книгу</button>    
+                <button class="internal-button" @click="showDeleteBookForm()">Удалить книгу</button>
         </div>
 
         <div id="register">
@@ -89,12 +89,12 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
                             </p>
                         </td>
                     </tr>
-                </tbody> 
+                </tbody>
                 </table>
             </div>
         </div>
 
-        
+
 
         <div class="form" v-show="currentForm === 'errorInfo'">
             <h1>
@@ -284,11 +284,11 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
         font-size: large;
         margin-bottom: 5px;
     }
-    
+
 
 
     .table {
-        width: 100%; 
+        width: 100%;
     }
 
     .table table {
@@ -320,7 +320,7 @@ import {GetAllBooks, RegisterStudentBook, CreateBook, DeleteBook, UpdateBook, Se
     .table tbody tr:hover {
         background-color: rgba(133, 133, 174, 0.77);
     }
-    
+
     .form {
         background-color: #e3e3e3f3;
         padding: 20px;
@@ -546,7 +546,7 @@ export default {
     },
     showDeleteStudentForm() {
         this.currentForm = 'deleteStudentForm'
-    }, 
+    },
 
 
     showRegisterBookForStudent() {
